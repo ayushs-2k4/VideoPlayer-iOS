@@ -18,6 +18,12 @@ struct VideoStream: Identifiable, Equatable, Hashable {
 func getStreams() -> [VideoStream] {
     let streams: [VideoStream] = [
         VideoStream(
+            url: "https://ndtvindiaelemarchana.akamaized.net/hls/live/2003679/ndtvindia/master.m3u8",
+            title: "NDTV India Live",
+            artist: "NDTV",
+            artworkURL: "https://www.ndtv.com/images/ndtv-logo.png"
+        ),
+        VideoStream(
             url: "https://static.nrk.no/dev/streamtests/shaka-hlg/nrktv9/cmaf.m3u8",
             title: "NRKTV9 HLG HDR",
             artist: "NRK",
@@ -113,4 +119,57 @@ func getStreams() -> [VideoStream] {
     ]
 
     return streams
+}
+
+struct Channel: Decodable {
+    let id: String?
+    let name: String?
+    let country: String?
+    let logo: String?
+    let website: String?
+}
+
+struct Stream: Decodable {
+    let channel: String?
+    let url: String?
+    let quality: String?
+}
+
+func fetchIPTVStreams() async throws -> [VideoStream] {
+    let channelsURL = URL(string: "https://iptv-org.github.io/api/channels.json")!
+    let streamsURL = URL(string: "https://iptv-org.github.io/api/streams.json")!
+
+    async let channelsDataRaw: Data = URLSession.shared.data(from: channelsURL).0
+    async let streamsDataRaw: Data = URLSession.shared.data(from: streamsURL).0
+
+    let (channelsData, streamsData) = try await (channelsDataRaw, streamsDataRaw)
+
+    print(channelsData)
+    print(streamsData)
+
+    let channelsList = try JSONDecoder().decode([Channel].self, from: channelsData)
+    let streamsList = try JSONDecoder().decode([Stream].self, from: streamsData)
+
+    let channelsMap = Dictionary(uniqueKeysWithValues: channelsList.map { ($0.id, $0) })
+
+    let videoStreams = streamsList.compactMap { stream -> VideoStream? in
+        guard
+            let channelID = stream.channel,
+            let url = stream.url,
+            let channel = channelsMap[channelID],
+            let name = channel.name
+        else {
+            return nil
+        }
+
+        return VideoStream(
+            url: url,
+            title: name,
+            artist: channel.country ?? "",
+            artworkURL: channel.logo ?? ""
+        )
+    }
+    .sorted { $0.title < $1.title }
+
+    return videoStreams
 }
