@@ -26,7 +26,7 @@ func getStreams() -> [VideoStream] {
         // *** Dolby Vision-ish / Dolby Atmos HLS **
         VideoStream(
             url: "https://devstreaming-cdn.apple.com/videos/streaming/examples/adv_dv_atmos/main.m3u8",
-            title: "Apple Dolby Vision + Atmos Demo",
+            title: "Apple Dolby Vision + Atmos Demo  ⭐️",
             artist: "Apple",
             artworkURL: "https://images.apple.com/v/streaming/shared/dv_atmos_thumb.jpg"
         ),
@@ -40,9 +40,9 @@ func getStreams() -> [VideoStream] {
         ),
         VideoStream(
             url: "https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8",
-            title: "Sintel",
+            title: "Sintel ⭐️",
             artist: "Bitmovin",
-            artworkURL: "https://upload.wikimedia.org/wikipedia/en/5/5d/Sintel_poster.jpg"
+            artworkURL: "https://resizing.flixster.com/7htOHKjqIZIP-jHp33y2Yzsde_Q=/fit-in/352x330/v2/https://resizing.flixster.com/-XZAfHZM39UwaGJIFWKAE8fS0ak=/v3/t/assets/p10892939_v_h9_aa.jpg"
         ),
         VideoStream(
             url: "https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel.ism/.m3u8",
