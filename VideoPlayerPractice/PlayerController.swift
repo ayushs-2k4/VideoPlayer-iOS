@@ -97,7 +97,6 @@ class PlayerController {
         }
 
         self.avPlayerViewController.requiresLinearPlayback = self.doesRequireLinearPlayback
-        self.player?.play()
     }
 
     func play() {
